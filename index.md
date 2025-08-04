@@ -2,7 +2,7 @@
 
 Coding style guidelines for the frontend team
 
-## Table of Contents
+### Table of Contents
 
 1. [Introduction](#overview)
 2. [Variables](#variables)
