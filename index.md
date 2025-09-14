@@ -4,27 +4,29 @@ Coding style guidelines for the frontend team
 
 ### Table of Contents
 
-1. [Introduction](#overview)
-2. [Variables](#variables)
-3. [Functions](#functions)
-4. [Testing](#testing)
-5. [Team Agreements and Decisions](#agreements)
+1. [Introduction](#overview)  
+2. [Variables](#variables)  
+3. [Functions](#functions)  
+4. [Testing](#testing)  
+5. [Chakra UI](#chakra-ui)  
+6. [Redux](#redux)  
+7. [Team Agreements and Decisions](#agreements)  
+8. [References](#references)
 
 ## Overview
 
 Our guidelines, principles, and standards help us:
 
-- Maintain high-quality code consistently across all projects.
-- Allow several developers to work on the same codebase simultaneously in a unified manner.
-- Produce code that's more reliable and easier to understand, debug, and maintain.
+- Maintain high-quality code consistently across all projects.  
+- Allow multiple developers to work on the same codebase in a unified manner.  
+- Produce code that's more reliable and easier to understand, debug, and maintain.  
 - Support the creation of reusable code.
 
 ## Contributing
 
-We prioritize **consistent coding practices** over **individual coding styles**. This document will be updated regularly
-to keep up with the needs of our development team and the nature of our projects.
+We prioritize **consistent coding practices** over **individual coding styles**. This document will be updated regularly to keep up with the needs of our development team and the nature of our projects.
 
-## **Variables**
+## Variables
 
 ### Use meaningful and pronounceable variable names
 
@@ -32,7 +34,7 @@ to keep up with the needs of our development team and the nature of our projects
 
 ```javascript
 const d = new Date();
-```
+````
 
 **Good:**
 
@@ -53,7 +55,7 @@ setTimeout(someFunction, 86400000);
 
 ```javascript
 // Declare them as capitalized named constants.
-const MILLISECONDS_PER_DAY = 60 * 60 * 24 * 1000; //86400000;
+const MILLISECONDS_PER_DAY = 60 * 60 * 24 * 1000; // 86400000
 
 setTimeout(someFunction, MILLISECONDS_PER_DAY);
 ```
@@ -89,7 +91,6 @@ const locations = ["Austin", "New York", "San Francisco"];
 locations.forEach((l) => {
   doStuff();
   doSomeOtherStuff();
-  // Wait, what is `l` for again?
   dispatch(l);
 });
 ```
@@ -107,8 +108,7 @@ locations.forEach((location) => {
 
 ### Don't add unneeded context
 
-If your class/object name tells you something, don't repeat that in your
-variable name.
+If your class/object name tells you something, don't repeat that in your variable name.
 
 **Bad:**
 
@@ -116,7 +116,7 @@ variable name.
 const Car = {
   carMake: "Mercedes",
   carModel: "GLC",
-  carColor: "Sliver",
+  carColor: "Silver",
 };
 
 function paintCar(car, color) {
@@ -130,7 +130,7 @@ function paintCar(car, color) {
 const Car = {
   make: "Mercedes",
   model: "GLC",
-  color: "Sliver",
+  color: "Silver",
 };
 
 function paintCar(car, color) {
@@ -140,10 +140,7 @@ function paintCar(car, color) {
 
 ### Use default parameters instead of short circuiting or conditionals
 
-Default parameters are often cleaner than short circuiting. Be aware that if you
-use them, your function will only provide default values for `undefined`
-arguments. Other "falsy" values such as `''`, `""`, `false`, `null`, `0`, and
-`NaN`, will not be replaced by a default value.
+Default parameters are often cleaner than short circuiting. Be aware that if you use them, your function will only provide default values for `undefined` arguments. Other “falsy” values such as `''`, `false`, `null`, `0`, and `NaN` will *not* be replaced by a default value.
 
 **Bad:**
 
@@ -162,14 +159,11 @@ function generateNewName(name = "Hipster Brew Co.") {
 }
 ```
 
-## **Functions**
+## Functions
 
 ### Function arguments (2 or fewer ideally)
 
-One or two arguments is the ideal case, and three should be avoided if possible.
-Anything more than that means your function is trying to do too much and should be consolidated. Most of the time a
-higher-level object will suffice as an
-argument.
+One or two arguments is the ideal case; three should be avoided if possible. Anything more than that means your function is likely doing too much. Most of the time a higher-level object will suffice as an argument.
 
 **Bad:**
 
@@ -254,9 +248,7 @@ addMonthToDate(1, date);
 
 ### Functions should only be one level of abstraction
 
-When you have more than one level of abstraction your function is usually
-doing too much. Splitting up functions leads to reusability and easier
-testing.
+When you have more than one level of abstraction your function is usually doing too much. Splitting up functions leads to reusability and easier testing.
 
 **Bad:**
 
@@ -324,8 +316,7 @@ function parse(tokens) {
 
 ### Don't use flags as function parameters
 
-Flags tell your user that this function does more than one thing. Functions should do one thing. Split out your
-functions if they are following different code paths based on a boolean.
+Flags tell your user that this function does more than one thing. Functions should do one thing. Split out your functions if they are following different code paths based on a boolean.
 
 **Bad:**
 
@@ -355,10 +346,8 @@ function createTempFile(name) {
 
 **Objective:** Strive to write functions that are pure. A pure function is one that:
 
-- Has No Side Effects: It does not alter any external state (e.g., global variables, disk storage) nor does it depend on
-  any external state that is subject to change.
-- Returns Consistent Outputs: For the same inputs, it always returns the same outputs, making its behavior predictable
-  and testable.
+* Has No Side Effects: It does not alter any external state (e.g., global variables, disk storage) nor does it depend on any external state that is subject to change.
+* Returns Consistent Outputs: For the same inputs, it always returns the same outputs, making its behavior predictable and testable.
 
 **Bad:**
 
@@ -428,7 +417,7 @@ if (isDOMNodePresent(node)) {
 }
 ```
 
-## **Testing**
+## Testing
 
 ### Single concept per test
 
@@ -482,23 +471,6 @@ describe("date-fns", () => {
 });
 ```
 
-### Accessible Queries
-
-Consider mimicking the user for more realistic interaction simulation and future proofness ..
-
-**Fine:**
-
-```javascript
-// Instead of
-const element = screen.getByTestId("element-id");
-```
-
-**Better:**
-
-```javascript
-// Use
-const element = screen.getByRole("textbox", { name: /element label/i });
-```
 
 ### Mock Data Management
 
@@ -515,16 +487,6 @@ export const mockDestination = {
 };
 ```
 
-### Dynamic Behavior Tests
-
-Add tests for dynamic behaviors like conditional rendering.
-
-```javascript
-it("renders alternative text when address is not provided", () => {
-  render(<KidnapNemo pickup={{}} destination={{}} />);
-  expect(screen.getByText("No address provided")).toBeInTheDocument();
-});
-```
 
 ### Error Handling
 
@@ -537,96 +499,62 @@ it("displays error message on incomplete data", () => {
 });
 ```
 
-### Reducing Repetition
 
-Use **beforeEach** for setup steps that are common across multiple tests.
+## Chakra UI
 
-```javascript
-beforeEach(() => {
-  render(<MyComponent pickup={mockPickup} destination={mockDestination} />);
-});
-```
+### Principles & Design Patterns
 
-### Context Integration
+* Style Props: Use style props instead of writing separate CSS or using too many `styled()` wrappers. This maintains consistency and makes theme overrides easier. ([v2.chakra-ui.com][1])
+* Simplicity: Keep component APIs simple; each component should do what its name suggests and expose minimal props. ([v2.chakra-ui.com][1])
+* Composition: Build complex UI by composing smaller, focused Chakra components (e.g. `Box`, `Flex`, `Stack`, etc.). Don’t make one component do too much. ([Daily.dev][2])
+* Accessibility: Always consider ARIA attributes, keyboard navigation, focus management, color contrast, etc. Chakra has built-in support but correct usage is the developer’s responsibility. ([Daily.dev][2])
+* Dark Mode Support: Components should work correctly in both light and dark mode. Use `useColorMode`, theme tokens, and ensure contrasts are acceptable. ([v2.chakra-ui.com][1])
 
-Test how the component behaves under different context providers.
+### Theming & Responsiveness
 
-```javascript
-it("renders correctly under different contexts", () => {
-  render(
-    <UserContext.Provider value={mockUser}>
-      <MyComponent pickup={mockPickup} destination={mockDestination} />
-    </UserContext.Provider>
-  );
-  expect(screen.getByText(mockUser.name)).toBeInTheDocument();
-});
-```
+* Use `extendTheme` to customize design tokens (colors, spacing, typography, breakpoints) in one place. ([Daily.dev][2])
+* Value responsiveness via Chakra’s array/object syntax for style props (for example for widths, paddings, display etc.). Test at different breakpoints. ([Daily.dev][2])
+* Reuse style tokens (colors, spacing etc.) instead of duplicated hardcoded values.
+* Avoid uncontrolled growth of inline style objects that force re-renders; prefer theme styles and memoization when needed.
 
-### Performance Assertions
+### Component Structure & Naming
 
-Monitor performance to ensure it remains within acceptable boundaries.
+* Boolean props should be named with auxiliary verbs such as `isSomething`, `hasSomething`, `shouldSomething`. For example: `isLoading`, `isDisabled`. ([v2.chakra-ui.com][1])
+* Co-locate component logic and styling in relevant places; separate presentational components vs container logic.
+* Keep components small and focused. If you find many props, consider splitting.
 
-```javascript
-it('renders efficiently', () => {
-    const { container } = render(<FindNemo... />);
-    expect(performance.now() - startTime).toBeLessThan(200);
-});
-```
+## Redux
 
-### Accessibility Checks
+### Core Principles (from Redux Official Style Guide)
 
-Utilize tools like jest-axe to ensure accessibility compliance.
+* **State immutability**: Do not mutate state directly. Use immutable patterns or tools like Immer. ([redux.js.org][3])
+* **Pure reducers**: Reducer functions must not have side effects (API calls, timeouts, randomness, etc.). ([redux.js.org][3])
+* **Only serializable values** in state and actions: avoid including things like Promises, class instances, functions, non-serializable data. ([redux.js.org][3])
+* Prefer having a **single Redux store per app**. ([redux.js.org][3])
 
-```javascript
-import { axe } from 'jest-axe';
+### Organizing Redux Code
 
-it('is accessible', async () => {
-    const { container } = render(<FindNemo... />);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-});
+* Use **Redux Toolkit** (RTK) as the standard approach for creating slices, store, and middleware, because it encodes many best practices. ([redux.js.org][3])
+* Structure code by **feature folders**: each “feature” (slice) should include its actions, reducers, selectors, types, maybe tests. This avoids spread-out code. ([redux.js.org][3])
+* Co-locate selectors with reducers, or in the same slice file to reduce friction and make state shape more understandable. ([Medium][4])
 
-```
+### Derived State, Selectors & Memoization
 
-### Modular Test Design
+* Derived data (data that can be computed from existing state) should be computed via selectors, not stored redundantly in the store. ([Medium][4])
+* Use memoization (e.g. `reselect`) for selectors that are expensive or run frequently. ([Medium][4])
 
-Break tests into smaller, more specific cases to avoid monolithic test functions and enhance clarity.
+### Handling Side Effects & Async Logic
 
-```javascript
-it("should display the default image when no image is provided", () => {
-  render(<ImageComponent />);
-  expect(screen.getByRole("img")).toHaveAttribute("src", "default-image.png");
-});
-```
+* Use middleware (thunks, sagas, or RTK Query) for asynchronous operations, side effects, API interactions. Reducers stay pure. ([redux.js.org][3])
+* Maintain explicit state for loading, success, error states in async flows so UI can reflect them.
 
-### Parameterized Tests
+### Testing & Debugging Redux
 
-Use parameterized tests for scenarios where you need to run the same test logic with different data. This reduces redundancy and increases the comprehensiveness of your tests.
+* Write tests for reducers, selectors, and any async logic or action creators where logic isn’t trivial.
+* Use DevTools, logging, or similar tools to inspect actions and state transitions.
+* Ensure same input + action always produce same output (pure functions), to facilitate predictability and debugging.
 
-```javascript
-const inputs = [
-  { input: "data1", expected: "result1" },
-  { input: "data2", expected: "result2" },
-];
-inputs.forEach(({ input, expected }) => {
-  it(`properly handles ${input}`, () => {
-    expect(processInput(input)).toBe(expected);
-  });
-});
-```
-
-### Get enough coverage for being confident, ~80% seems to be the lucky number
-
-The purpose of testing is to get enough confidence for moving fast, obviously the more code is tested the more confident
-the team can be:
-
-- 10–30% is obviously too low to get any sense about the build correctness
-- 100% is very expensive and might shift your focus from the critical paths to the exotic corners of the code
-- 70–90% is a good balance between the confidence and the cost
-
-## Agreements
-
-### Team Agreements and Decisions
+## Team Agreements and Decisions
 
 Below is a table of the agreements and decisions that the team has already made:
 
@@ -635,7 +563,7 @@ Below is a table of the agreements and decisions that the team has already made:
 | Package Manager            | npm                                                                                   |
 | Linting                    | Eslint                                                                                |
 | Formatter                  | Prettier                                                                              |
-| Styling                    |            sacss                                                                      |
+| Styling                    | sacss                                                                                 |
 | Component Library          | [chakra-ui](https://chakra-ui.com/)                                                   |
 | Pull Request Template      | [This template](./Resources/pull_request_template.md)                                 |
 | Git Ignore                 | [This template](./Resources/.gitignore)                                               |
@@ -656,12 +584,15 @@ Below is a table of the agreements and decisions that the team has already made:
 
 ## References
 
-Some suggested libraries and tools to use in the projects:
+* Redux Style Guide — Official best practices for Redux emphasis on immutability, pure reducers, etc. ([redux.js.org][3])
+* Chakra UI Design Principles & Docs — Information about theming, style props, responsiveness, composition, dark mode. ([v2.chakra-ui.com][1])
+* Chakra UI Adoption Guide — key features and trade-offs when using Chakra UI in production. ([LogRocket Blog][5])
+* Redux Best Practices (community articles) — e.g. rules about selectors, derived data, normalizing state. ([Medium][4])
+* Chakra UI Design Patterns — examples of modular design, layout, responsiveness. ([Daily.dev][2])
 
-| Purpose       | Details                                         |
-| ------------- | ----------------------------------------------- |
-| Drag and Drop | [Swapy](https://swapy.tahazsh.com/)             |
-| Charts        | [Chart.js](https://www.chartjs.org/)            |
-| Onboarding    | [Driver.js](https://driverjs.com/)              |
-| Toasts        | [React Hot Toast](https://react-hot-toast.com/) |
-| React Hooks   | [useHooks](https://usehooks.com/)               |
+
+[1]: https://v2.chakra-ui.com/getting-started/principles?utm_source=chatgpt.com "Design Principles - Chakra UI"
+[2]: https://daily.dev/blog/chakra-ui-design-patterns-basics?utm_source=chatgpt.com "Chakra UI Design Patterns: Basics - Daily.dev"
+[3]: https://redux.js.org/style-guide/?utm_source=chatgpt.com "Redux Style Guide"
+[4]: https://medium.com/%40kylpo/redux-best-practices-eef55a20cc72?utm_source=chatgpt.com "Redux Best Practices - Medium"
+[5]: https://blog.logrocket.com/chakra-ui-adoption-guide/?utm_source=chatgpt.com "Chakra UI adoption guide: Overview, examples, and alternatives"
